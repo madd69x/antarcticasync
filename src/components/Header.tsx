@@ -47,16 +47,34 @@ export const Header: React.FC<HeaderProps> = ({
         
         {/* Institutional Identity & Station Selector */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs tracking-wider flex-shrink-0">
-            NCPOR
+          {/* Scientific Polar Grid Insignia */}
+          <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center border border-slate-800 shadow-xs flex-shrink-0">
+            <svg 
+              className="w-5 h-5 text-slate-100" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="1.75" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              {/* Polar coordinate rings */}
+              <circle cx="12" cy="12" r="9.5" strokeOpacity="0.3" strokeDasharray="2 2" />
+              <circle cx="12" cy="12" r="6" strokeOpacity="0.8" />
+              <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+              {/* Directional crosshairs */}
+              <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3" strokeOpacity="0.7" />
+              {/* High-latitude azimuth needle */}
+              <path d="m14 10-4 4" stroke="#38bdf8" strokeWidth="1.5" />
+            </svg>
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                Ministry of Earth Sciences, Government of India
+              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">
+                NCPOR · Ministry of Earth Sciences, India
               </span>
               <span className="text-slate-300">•</span>
-              <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+              <span className="text-[10px] font-mono font-medium text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200">
                 {station.expeditionNumber}
               </span>
             </div>
