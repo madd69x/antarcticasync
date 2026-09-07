@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { StationId, ConvoyTraverse } from '../types';
 import { ACTIVE_CONVOY, STATIONS } from '../services/polarService';
-import { MapPin, Navigation, Radio, Satellite, Compass, ShieldAlert, Truck } from 'lucide-react';
+import { Compass, Satellite, Navigation, Truck } from 'lucide-react';
 
 interface PolarMapViewProps {
   currentStation: StationId;
@@ -13,9 +13,8 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
   onSelectStation
 }) => {
   const [convoy, setConvoy] = useState<ConvoyTraverse>(ACTIVE_CONVOY);
-  const [nextPassSeconds, setNextPassSeconds] = useState(745); // ~12 mins
+  const [nextPassSeconds, setNextPassSeconds] = useState(745);
 
-  // Satellite pass countdown
   useEffect(() => {
     const timer = setInterval(() => {
       setNextPassSeconds(prev => (prev > 1 ? prev - 1 : 900));
@@ -30,192 +29,179 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       
       {/* Masthead */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
+      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-blue-700 uppercase tracking-wide">
-                Antarctic Geographic Information System (GIS)
-              </span>
-              <span className="text-slate-300">•</span>
-              <span className="text-xs text-slate-500">Azimuthal Stereographic Polar Projection</span>
-            </div>
-            <h2 className="text-base font-bold text-slate-900 mt-0.5">
-              Indian Research Stations &amp; Deep-Ice Convoy Traverses
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+              Antarctic Geographic Information System (GIS)
+            </span>
+            <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider mt-0.5">
+              Azimuthal South Polar Stereographic Projection (70°S - 90°S)
             </h2>
           </div>
 
-          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-xs">
-            <Satellite className="w-4 h-4 text-purple-600 animate-pulse" />
+          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded text-xs font-mono">
+            <Satellite className="w-3.5 h-3.5 text-slate-500" />
             <div>
-              <div className="text-[10px] text-slate-400 font-semibold uppercase">Next Iridium-NEXT Pass</div>
-              <div className="font-bold text-slate-800 font-mono">{formatCountdown(nextPassSeconds)} (Window: 8 min)</div>
+              <span className="text-[10px] text-slate-400 uppercase font-sans font-semibold block">Next Orbital Window:</span>
+              <span className="font-bold text-slate-800">{formatCountdown(nextPassSeconds)} (Iridium-NEXT)</span>
             </div>
           </div>
         </div>
 
-        {/* Polar Projection Map Canvas */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-4">
+        {/* Polar Projection Map & Traverses */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-3">
           
           {/* Map Visualizer (2 Cols) */}
-          <div className="lg:col-span-2 bg-slate-900 rounded-xl p-4 relative overflow-hidden flex flex-col justify-between min-h-[380px] text-white">
+          <div className="lg:col-span-2 bg-slate-900 rounded-lg p-4 relative overflow-hidden flex flex-col justify-between min-h-[380px] text-white">
             
-            {/* Compass & Projection Header */}
             <div className="flex justify-between items-center z-10">
-              <div className="flex items-center gap-2 text-xs font-mono text-cyan-400">
-                <Compass className="w-4 h-4" />
-                <span>South Pole Centric (70°S - 90°S Grid)</span>
+              <div className="flex items-center gap-2 text-xs font-mono text-slate-300">
+                <Compass className="w-4 h-4 text-slate-400" />
+                <span>Polar Stereo WGS-84 Grid</span>
               </div>
-              <span className="text-[10px] font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">
-                WGS-84 Antarctic Polar Stereo
+              <span className="text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                True South Polar Reference
               </span>
             </div>
 
-            {/* SVG Polar Grid & Station Markers */}
-            <div className="relative my-6 flex items-center justify-center">
+            <div className="relative my-4 flex items-center justify-center">
               <svg viewBox="0 0 500 360" className="w-full max-h-[300px] select-none">
                 {/* Latitude Rings */}
-                <circle cx="250" cy="180" r="160" fill="none" stroke="#1e293b" strokeWidth="1.5" strokeDasharray="4 4" />
-                <circle cx="250" cy="180" r="110" fill="none" stroke="#1e293b" strokeWidth="1.5" />
-                <circle cx="250" cy="180" r="60" fill="none" stroke="#334155" strokeWidth="1.5" strokeDasharray="4 4" />
+                <circle cx="250" cy="180" r="160" fill="none" stroke="#1e293b" strokeWidth="1" strokeDasharray="3 3" />
+                <circle cx="250" cy="180" r="110" fill="none" stroke="#1e293b" strokeWidth="1" />
+                <circle cx="250" cy="180" r="60" fill="none" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
                 
                 {/* Lat labels */}
-                <text x="254" y="30" fill="#64748b" fontSize="9" fontFamily="monospace">70°S</text>
-                <text x="254" y="80" fill="#64748b" fontSize="9" fontFamily="monospace">80°S</text>
-                <text x="254" y="176" fill="#94a3b8" fontSize="10" fontFamily="monospace" fontWeight="bold">South Pole (90°S)</text>
-                <circle cx="250" cy="180" r="3" fill="#94a3b8" />
+                <text x="254" y="28" fill="#64748b" fontSize="9" fontFamily="monospace">70°S</text>
+                <text x="254" y="78" fill="#64748b" fontSize="9" fontFamily="monospace">80°S</text>
+                <text x="254" y="176" fill="#cbd5e1" fontSize="10" fontFamily="monospace" fontWeight="bold">South Pole (90°S)</text>
+                <circle cx="250" cy="180" r="2.5" fill="#cbd5e1" />
 
-                {/* Continental Ice Shelf Silhouette representation */}
+                {/* Continental Silhouette */}
                 <path
                   d="M 120 180 Q 150 90 250 80 Q 360 80 400 160 Q 420 240 330 290 Q 230 310 140 250 Z"
-                  fill="#0f172a"
-                  stroke="#38bdf8"
-                  strokeWidth="1.5"
-                  strokeOpacity="0.4"
+                  fill="#0b1120"
+                  stroke="#475569"
+                  strokeWidth="1.2"
                 />
 
-                {/* Indian Station 1: Bharati (Larsemann Hills, 69°S 76°E - East Antarctica) */}
+                {/* Station: Bharati */}
                 <g 
-                  className="cursor-pointer group"
+                  className="cursor-pointer"
                   onClick={() => onSelectStation('bharati')}
                 >
-                  <circle cx="370" cy="120" r="8" fill="#0284c7" fillOpacity="0.3" className="animate-ping" />
-                  <circle cx="370" cy="120" r="5" fill="#38bdf8" />
-                  <text x="382" y="118" fill="#e0f2fe" fontSize="11" fontWeight="bold">Bharati Station</text>
-                  <text x="382" y="129" fill="#7dd3fc" fontSize="9" fontFamily="monospace">69°24′S 76°11′E (Active)</text>
+                  <circle cx="370" cy="120" r="4" fill="#38bdf8" />
+                  <text x="380" y="118" fill="#f8fafc" fontSize="10" fontWeight="bold">Bharati Station</text>
+                  <text x="380" y="128" fill="#94a3b8" fontSize="8" fontFamily="monospace">69°24′S 76°11′E (Active)</text>
                 </g>
 
-                {/* Indian Station 2: Maitri (Schirmacher Oasis, 70°S 11°E - Queen Maud Land) */}
+                {/* Station: Maitri */}
                 <g 
-                  className="cursor-pointer group"
+                  className="cursor-pointer"
                   onClick={() => onSelectStation('maitri')}
                 >
-                  <circle cx="160" cy="130" r="8" fill="#10b981" fillOpacity="0.3" className="animate-ping" />
-                  <circle cx="160" cy="130" r="5" fill="#34d399" />
-                  <text x="90" y="125" fill="#ecfdf5" fontSize="11" fontWeight="bold">Maitri Station</text>
-                  <text x="80" y="136" fill="#6ee7b7" fontSize="9" fontFamily="monospace">70°45′S 11°44′E</text>
+                  <circle cx="160" cy="130" r="4" fill="#34d399" />
+                  <text x="95" y="125" fill="#f8fafc" fontSize="10" fontWeight="bold">Maitri Station</text>
+                  <text x="85" y="135" fill="#94a3b8" fontSize="8" fontFamily="monospace">70°45′S 11°44′E</text>
                 </g>
 
-                {/* Historical Dakshin Gangotri (70°S 12°E) */}
-                <g className="cursor-default opacity-70">
-                  <circle cx="180" cy="150" r="3" fill="#94a3b8" />
-                  <text x="190" y="153" fill="#94a3b8" fontSize="9">Dakshin Gangotri (Historical)</text>
+                {/* Historical: Dakshin Gangotri */}
+                <g className="cursor-default opacity-60">
+                  <circle cx="180" cy="150" r="2.5" fill="#64748b" />
+                  <text x="190" y="153" fill="#64748b" fontSize="8">Dakshin Gangotri (Depot)</text>
                 </g>
 
-                {/* Convoy Traverse Route from Bharati Inland */}
+                {/* Convoy Traverse Route */}
                 <path
                   d="M 370 120 Q 350 145 325 160"
                   fill="none"
                   stroke="#fbbf24"
-                  strokeWidth="2"
-                  strokeDasharray="4 3"
+                  strokeWidth="1.5"
+                  strokeDasharray="4 2"
                 />
                 
                 {/* Active Convoy Marker */}
-                <g className="animate-pulse">
-                  <circle cx="325" cy="160" r="6" fill="#f59e0b" />
-                  <text x="336" y="164" fill="#fef3c7" fontSize="10" fontWeight="bold">PB-01 Convoy</text>
-                  <text x="336" y="175" fill="#fde68a" fontSize="8" fontFamily="monospace">64 km inland</text>
+                <g>
+                  <circle cx="325" cy="160" r="4" fill="#f59e0b" />
+                  <text x="335" y="163" fill="#fef3c7" fontSize="9" fontWeight="bold">PB-01 Convoy</text>
+                  <text x="335" y="173" fill="#cbd5e1" fontSize="8" fontFamily="monospace">64.2 km inland</text>
                 </g>
               </svg>
             </div>
 
-            {/* Map Legend */}
-            <div className="flex items-center justify-between z-10 text-[11px] text-slate-400 border-t border-slate-800 pt-2 flex-wrap gap-2">
+            <div className="flex items-center justify-between z-10 text-[11px] text-slate-400 border-t border-slate-800 pt-2 flex-wrap gap-2 font-mono">
               <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> Bharati (Selected)</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Maitri</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Active PistenBully Convoy</span>
+                <span>[B] Bharati</span>
+                <span>[M] Maitri</span>
+                <span>[C] Active Traverse PB-01</span>
               </div>
-              <span className="font-mono text-cyan-300">Scale: 1:5,000,000</span>
+              <span>Scale: 1:5,000,000</span>
             </div>
 
           </div>
 
           {/* Right Column: Convoy Telemetry Details & Scalability */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             
             {/* Active Inland Convoy Card */}
-            <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/60 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Truck className="w-4 h-4 text-amber-700" />
-                  <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wide">
-                    Active Traverse Convoy
-                  </h4>
-                </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+            <div className="p-3.5 rounded border border-slate-200 bg-white space-y-2.5">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                  Active Inland Traverse
+                </span>
+                <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-800 border border-slate-200">
                   VHF: Nominal
                 </span>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div>
-                  <span className="text-slate-500 block text-[11px]">Mission Name</span>
+                  <span className="text-slate-400 block text-[10px] uppercase font-semibold">Mission Designation</span>
                   <strong className="text-slate-900">{convoy.name}</strong>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <div className="bg-white p-2 rounded border border-amber-200">
-                    <span className="text-slate-400 block">Lead Unit:</span>
-                    <strong className="text-slate-800 font-mono">{convoy.leadVehicle}</strong>
+                <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+                  <div className="bg-slate-50 p-2 rounded border border-slate-200">
+                    <span className="text-slate-400 block text-[10px] font-sans font-semibold">Lead Unit:</span>
+                    <strong className="text-slate-800">{convoy.leadVehicle}</strong>
                   </div>
-                  <div className="bg-white p-2 rounded border border-amber-200">
-                    <span className="text-slate-400 block">Current Speed:</span>
-                    <strong className="text-slate-800 font-mono">{convoy.speedKmh} km/h</strong>
+                  <div className="bg-slate-50 p-2 rounded border border-slate-200">
+                    <span className="text-slate-400 block text-[10px] font-sans font-semibold">Traverse Speed:</span>
+                    <strong className="text-slate-800">{convoy.speedKmh} km/h</strong>
                   </div>
-                  <div className="bg-white p-2 rounded border border-amber-200">
-                    <span className="text-slate-400 block">Distance from Base:</span>
-                    <strong className="text-slate-800 font-mono">{convoy.distanceFromBaseKm} km / {convoy.totalDistanceKm} km</strong>
+                  <div className="bg-slate-50 p-2 rounded border border-slate-200">
+                    <span className="text-slate-400 block text-[10px] font-sans font-semibold">Distance from Base:</span>
+                    <strong className="text-slate-800">{convoy.distanceFromBaseKm} km / {convoy.totalDistanceKm} km</strong>
                   </div>
-                  <div className="bg-white p-2 rounded border border-amber-200">
-                    <span className="text-slate-400 block">Fuel on-board:</span>
-                    <strong className="text-slate-800 font-mono">{convoy.fuelOnBoardLitres} L (ATF)</strong>
+                  <div className="bg-slate-50 p-2 rounded border border-slate-200">
+                    <span className="text-slate-400 block text-[10px] font-sans font-semibold">Fuel on-board:</span>
+                    <strong className="text-slate-800">{convoy.fuelOnBoardLitres} L (ATF)</strong>
                   </div>
                 </div>
 
                 <div className="text-[11px] text-slate-600 pt-1">
-                  Crew on-board: <strong>{convoy.crewMembers.join(', ')}</strong>
+                  Crew: <strong>{convoy.crewMembers.join(', ')}</strong>
                 </div>
               </div>
             </div>
 
-            {/* Proof of Scalability: Himalayan Station Card */}
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+            {/* Himalayan Scalability Reference */}
+            <div className="p-3.5 rounded border border-slate-200 bg-slate-50 space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-slate-500 uppercase">Scalability Proof · Himalayas</span>
-                <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">13,500 ft</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">High-Altitude Cryosphere</span>
+                <span className="text-[10px] font-mono text-slate-600 bg-white px-1.5 rounded border border-slate-200">13,500 ft</span>
               </div>
-              <h4 className="font-bold text-slate-900 text-sm">Himansh Research Station</h4>
-              <p className="text-xs text-slate-500">
-                Chandra Basin, Spiti Valley, Himachal Pradesh. Running the exact same AntarcticaSync offline architecture over solar microgrids.
+              <h4 className="font-bold text-slate-900 text-xs">Himansh Research Station</h4>
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                Chandra Basin, Spiti Valley, Himachal Pradesh. Running the exact same offline-first architecture over high-altitude solar microgrids.
               </p>
               <button
                 onClick={() => onSelectStation('himansh')}
-                className="w-full mt-2 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 hover:bg-slate-800 text-white transition-colors"
+                className="w-full mt-1.5 py-1 text-xs font-semibold rounded bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 transition-colors"
               >
                 Switch View to Himansh Station
               </button>

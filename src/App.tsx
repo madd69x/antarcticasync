@@ -25,20 +25,14 @@ import { PolarMapView } from './components/PolarMapView';
 import { PowerLifeSupportView } from './components/PowerLifeSupportView';
 import { InventoryView } from './components/InventoryView';
 import { HqCoordinationView } from './components/HqCoordinationView';
-import { SyncInspectorModal } from './components/SyncInspectorModal';
+import { SafetyMedicalView } from './components/SafetyMedicalView';
+import { SyncBridgeView } from './components/SyncBridgeView';
 import { NewLogModal } from './components/NewLogModal';
-import { CrdtPlaygroundModal } from './components/CrdtPlaygroundModal';
-import { BlizzardLockdownModal } from './components/BlizzardLockdownModal';
-import { SurvivalSimulatorModal } from './components/SurvivalSimulatorModal';
-import { DataExportModal } from './components/DataExportModal';
-import { MadridEcoModal } from './components/MadridEcoModal';
-import { TelemedicineModal } from './components/TelemedicineModal';
-import { JudgeTourModal } from './components/JudgeTourModal';
 
 export const App: React.FC = () => {
   const [currentStation, setCurrentStation] = useState<StationId>('bharati');
   const [networkMode, setNetworkMode] = useState<NetworkLinkMode>('online');
-  const [activeTab, setActiveTab] = useState<'daily' | 'map' | 'power' | 'inventory' | 'hq'>('daily');
+  const [activeTab, setActiveTab] = useState<'overview' | 'power' | 'map' | 'logistics' | 'safety' | 'sync' | 'hq'>('overview');
 
   // Database states
   const [logs, setLogs] = useState<StationLogEntry[]>([]);
@@ -53,14 +47,6 @@ export const App: React.FC = () => {
 
   // Modals
   const [isNewLogOpen, setIsNewLogOpen] = useState(false);
-  const [isSyncInspectorOpen, setIsSyncInspectorOpen] = useState(false);
-  const [isCrdtPlaygroundOpen, setIsCrdtPlaygroundOpen] = useState(false);
-  const [isBlizzardLockdownOpen, setIsBlizzardLockdownOpen] = useState(false);
-  const [isSurvivalSimulatorOpen, setIsSurvivalSimulatorOpen] = useState(false);
-  const [isDataExportOpen, setIsDataExportOpen] = useState(false);
-  const [isMadridEcoOpen, setIsMadridEcoOpen] = useState(false);
-  const [isTelemedicineOpen, setIsTelemedicineOpen] = useState(false);
-  const [isJudgeTourOpen, setIsJudgeTourOpen] = useState(false);
 
   // Initialize DB and load logs
   const reloadData = async () => {
@@ -175,10 +161,10 @@ export const App: React.FC = () => {
 
     await addStationLog(
       currentStation,
-      'Inventory Manager',
-      'Logistics Bay',
+      'Inventory Auditor',
+      'Logistics Section',
       'Logistics',
-      `Stock inventory count updated for "${item.name}": now ${newStock.toLocaleString()} ${item.unit} (${daysRemaining} days buffer remaining).`,
+      `Physical stock count updated for "${item.name}": now ${newStock.toLocaleString()} ${item.unit} (${daysRemaining} days operational buffer).`,
       'Stock-Audit',
       'routine',
       networkMode
@@ -204,7 +190,7 @@ export const App: React.FC = () => {
       'Priya Nair',
       'Station Mechanical Engineer',
       'Generator',
-      `Manual microgrid load transfer executed. Station electrical bus successfully transitioned to ${targetGen?.name || targetId}. All microgrid frequencies holding nominal at 50.1 Hz.`,
+      `Station electrical bus transitioned to ${targetGen?.name || targetId}. Bus frequency holding at 50.1 Hz nominal.`,
       'Genset-Switch',
       'important',
       networkMode
@@ -216,27 +202,21 @@ export const App: React.FC = () => {
   const currentFuelStock = consumables.find(c => c.category === 'Fuel')?.currentStock || 68200;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
       
-      {/* Top MoES Header */}
+      {/* Institutional Top Header */}
       <Header
         currentStation={currentStation}
         onSelectStation={setCurrentStation}
-        onOpenSyncInspector={() => setIsSyncInspectorOpen(true)}
-        onOpenCrdtPlayground={() => setIsCrdtPlaygroundOpen(true)}
-        onOpenBlizzardLockdown={() => setIsBlizzardLockdownOpen(true)}
-        onOpenSurvivalSimulator={() => setIsSurvivalSimulatorOpen(true)}
-        onOpenDataExport={() => setIsDataExportOpen(true)}
-        onOpenJudgeTour={() => setIsJudgeTourOpen(true)}
-        onOpenMadridEco={() => setIsMadridEcoOpen(true)}
-        onOpenTelemedicine={() => setIsTelemedicineOpen(true)}
+        onOpenNewLogModal={() => setIsNewLogOpen(true)}
+        networkMode={networkMode}
         pendingSyncCount={pendingSyncCount}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-5 space-y-5">
+      {/* Main Workspace */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-4 space-y-4">
         
-        {/* Humane Satellite Banner */}
+        {/* Discrete Satellite Banner */}
         <SatelliteBanner
           networkMode={networkMode}
           onSetNetworkMode={handleSetNetworkMode}
@@ -245,66 +225,88 @@ export const App: React.FC = () => {
           onTriggerSync={handleTriggerSync}
         />
 
-        {/* Navigation Tabs */}
-        <div className="flex items-center gap-2 border-b border-slate-200 text-sm font-medium overflow-x-auto pb-0.5">
+        {/* Primary Workspace Navigation Tabs */}
+        <div className="flex items-center gap-1 border-b border-slate-200 text-xs font-semibold overflow-x-auto pb-0.5">
           <button
-            onClick={() => setActiveTab('daily')}
-            className={`pb-2.5 px-3 border-b-2 flex items-center gap-2 transition-all whitespace-nowrap ${
-              activeTab === 'daily'
-                ? 'border-slate-900 text-slate-900 font-bold'
+            onClick={() => setActiveTab('overview')}
+            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+              activeTab === 'overview'
+                ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <span>📋 Daily Station Overview</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('map')}
-            className={`pb-2.5 px-3 border-b-2 flex items-center gap-2 transition-all whitespace-nowrap ${
-              activeTab === 'map'
-                ? 'border-slate-900 text-slate-900 font-bold'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <span>🗺️ Polar Map &amp; Convoy</span>
+            Overview
           </button>
 
           <button
             onClick={() => setActiveTab('power')}
-            className={`pb-2.5 px-3 border-b-2 flex items-center gap-2 transition-all whitespace-nowrap ${
+            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
               activeTab === 'power'
-                ? 'border-slate-900 text-slate-900 font-bold'
+                ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <span>⚡ Power &amp; Microgrid</span>
+            Power &amp; Microgrid
           </button>
 
           <button
-            onClick={() => setActiveTab('inventory')}
-            className={`pb-2.5 px-3 border-b-2 flex items-center gap-2 transition-all whitespace-nowrap ${
-              activeTab === 'inventory'
-                ? 'border-slate-900 text-slate-900 font-bold'
+            onClick={() => setActiveTab('map')}
+            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+              activeTab === 'map'
+                ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <span>📦 Winter Supplies &amp; Fuel</span>
+            Geographic Map &amp; Traverses
+          </button>
+
+          <button
+            onClick={() => setActiveTab('logistics')}
+            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+              activeTab === 'logistics'
+                ? 'border-slate-900 text-slate-900'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            Logistics, Waste &amp; Science
+          </button>
+
+          <button
+            onClick={() => setActiveTab('safety')}
+            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+              activeTab === 'safety'
+                ? 'border-slate-900 text-slate-900'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            Safety, Muster &amp; Telemedicine
+          </button>
+
+          <button
+            onClick={() => setActiveTab('sync')}
+            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+              activeTab === 'sync'
+                ? 'border-slate-900 text-slate-900'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            Replication &amp; CRDT Bridge
           </button>
 
           <button
             onClick={() => setActiveTab('hq')}
-            className={`pb-2.5 px-3 border-b-2 flex items-center gap-2 transition-all whitespace-nowrap ${
+            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
               activeTab === 'hq'
-                ? 'border-slate-900 text-slate-900 font-bold'
+                ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <span>🏢 MoES HQ Coordination</span>
+            NCPOR Strategic Command
           </button>
         </div>
 
         {/* Tab Views */}
-        {activeTab === 'daily' && (
+        {activeTab === 'overview' && (
           <DailyStationView
             currentStation={currentStation}
             weather={weather}
@@ -312,8 +314,15 @@ export const App: React.FC = () => {
             logs={logs}
             onOpenNewLogModal={() => setIsNewLogOpen(true)}
             onQuickAction={handleQuickAction}
-            onOpenMadridEco={() => setIsMadridEcoOpen(true)}
-            onOpenTelemedicine={() => setIsTelemedicineOpen(true)}
+          />
+        )}
+
+        {activeTab === 'power' && (
+          <PowerLifeSupportView
+            generators={generators}
+            lifeSupport={lifeSupport}
+            currentFuelStockLitres={currentFuelStock}
+            onSwitchGenerator={handleSwitchGenerator}
           />
         )}
 
@@ -326,18 +335,37 @@ export const App: React.FC = () => {
           />
         )}
 
-        {activeTab === 'power' && (
-          <PowerLifeSupportView
-            generators={generators}
-            lifeSupport={lifeSupport}
-            onSwitchGenerator={handleSwitchGenerator}
+        {activeTab === 'logistics' && (
+          <InventoryView
+            consumables={consumables}
+            logs={logs}
+            stationName={STATIONS[currentStation].name}
+            onUpdateStock={handleUpdateStock}
           />
         )}
 
-        {activeTab === 'inventory' && (
-          <InventoryView
-            consumables={consumables}
-            onUpdateStock={handleUpdateStock}
+        {activeTab === 'safety' && (
+          <SafetyMedicalView
+            onTriggerAlertLog={async (txt) => {
+              await addStationLog(
+                currentStation,
+                'Station Safety Officer',
+                'Operations Command',
+                'General',
+                txt,
+                'Safety-Protocol',
+                'emergency',
+                networkMode
+              );
+              await reloadData();
+            }}
+          />
+        )}
+
+        {activeTab === 'sync' && (
+          <SyncBridgeView
+            isOnline={networkMode !== 'blackout'}
+            onTriggerSync={handleTriggerSync}
           />
         )}
 
@@ -345,13 +373,13 @@ export const App: React.FC = () => {
           <HqCoordinationView
             onSelectStation={(st) => {
               setCurrentStation(st);
-              setActiveTab('daily');
+              setActiveTab('overview');
             }}
             onBroadcastMessage={async (msg) => {
               await addStationLog(
                 currentStation,
                 'NCPOR Duty Officer',
-                'Goa Polar Operations Room',
+                'Goa Polar Operations Desk',
                 'General',
                 `HQ DIRECTIVE RECEIVED: ${msg}`,
                 'HQ-Broadcast',
@@ -365,104 +393,23 @@ export const App: React.FC = () => {
 
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 mt-12 py-4 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      {/* Institutional Footer */}
+      <footer className="bg-white border-t border-slate-200 mt-8 py-3.5 text-xs text-slate-500 font-mono">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>
-            AntarcticaSync · Smart India Hackathon 2025 (PS ID: SIH26060) · Team FrostByte
+            AntarcticaSync · National Centre for Polar and Ocean Research (NCPOR), Ministry of Earth Sciences
           </span>
           <span>
-            Ministry of Earth Sciences &amp; National Centre for Polar and Ocean Research (NCPOR)
+            SIH 2025 · PS ID: SIH26060 · Team FrostByte
           </span>
         </div>
       </footer>
 
-      {/* Modals */}
+      {/* New Logbook Record Modal */}
       <NewLogModal
         isOpen={isNewLogOpen}
         onClose={() => setIsNewLogOpen(false)}
         onSubmit={handleAddLog}
-      />
-
-      <SyncInspectorModal
-        isOpen={isSyncInspectorOpen}
-        onClose={() => setIsSyncInspectorOpen(false)}
-        onTriggerSync={handleTriggerSync}
-        isOnline={networkMode !== 'blackout'}
-      />
-
-      <CrdtPlaygroundModal
-        isOpen={isCrdtPlaygroundOpen}
-        onClose={() => setIsCrdtPlaygroundOpen(false)}
-      />
-
-      <BlizzardLockdownModal
-        isOpen={isBlizzardLockdownOpen}
-        onClose={() => setIsBlizzardLockdownOpen(false)}
-        onTriggerAlertLog={async (txt) => {
-          await addStationLog(
-            currentStation,
-            'Station Leader',
-            'Master Command Room',
-            'Weather',
-            txt,
-            'Emergency-Protocol',
-            'emergency',
-            networkMode
-          );
-          await reloadData();
-        }}
-      />
-
-      <SurvivalSimulatorModal
-        isOpen={isSurvivalSimulatorOpen}
-        onClose={() => setIsSurvivalSimulatorOpen(false)}
-        currentStockLitres={currentFuelStock}
-      />
-
-      <DataExportModal
-        isOpen={isDataExportOpen}
-        onClose={() => setIsDataExportOpen(false)}
-        logs={logs}
-        consumables={consumables}
-        stationName={STATIONS[currentStation].name}
-      />
-
-      <MadridEcoModal
-        isOpen={isMadridEcoOpen}
-        onClose={() => setIsMadridEcoOpen(false)}
-        stationName={STATIONS[currentStation].name}
-      />
-
-      <TelemedicineModal
-        isOpen={isTelemedicineOpen}
-        onClose={() => setIsTelemedicineOpen(false)}
-        onLogEmergency={async (txt) => {
-          await addStationLog(
-            currentStation,
-            'Dr. Ananya Joshi',
-            'Station Medical Officer',
-            'Medical',
-            txt,
-            'Telemed-Consult',
-            'emergency',
-            networkMode
-          );
-          await reloadData();
-        }}
-      />
-
-      <JudgeTourModal
-        isOpen={isJudgeTourOpen}
-        onClose={() => setIsJudgeTourOpen(false)}
-        onNavigateTab={(tab) => {
-          setActiveTab(tab);
-          setIsJudgeTourOpen(false);
-        }}
-        onOpenCrdt={() => setIsCrdtPlaygroundOpen(true)}
-        onOpenBlizzard={() => setIsBlizzardLockdownOpen(true)}
-        onOpenSimulator={() => setIsSurvivalSimulatorOpen(true)}
-        onOpenMadrid={() => setIsMadridEcoOpen(true)}
       />
 
     </div>

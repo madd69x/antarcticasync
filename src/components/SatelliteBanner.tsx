@@ -18,56 +18,56 @@ export const SatelliteBanner: React.FC<SatelliteBannerProps> = ({
   onTriggerSync
 }) => {
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+    <div className="bg-white border border-slate-200 rounded-lg p-3 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
       
       {/* Status Info */}
       <div className="flex items-start sm:items-center gap-3">
-        <div className="mt-0.5 sm:mt-0 flex-shrink-0">
+        <div className="mt-0.5 sm:mt-0 flex-shrink-0 text-slate-600">
           {networkMode === 'online' && (
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200">
-              <Wifi className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-md bg-slate-100 flex items-center justify-center border border-slate-200">
+              <Wifi className="w-3.5 h-3.5 text-slate-800" />
             </div>
           )}
           {networkMode === 'patchy' && (
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200">
-              <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+            <div className="w-7 h-7 rounded-md bg-amber-50 flex items-center justify-center border border-amber-200">
+              <RefreshCw className={`w-3.5 h-3.5 text-amber-700 ${isSyncing ? 'animate-spin' : ''}`} />
             </div>
           )}
           {networkMode === 'blackout' && (
-            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center border border-rose-200">
-              <WifiOff className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-md bg-rose-50 flex items-center justify-center border border-rose-200">
+              <WifiOff className="w-3.5 h-3.5 text-rose-700" />
             </div>
           )}
         </div>
 
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-bold text-slate-900">
-              {networkMode === 'online' && 'Satellite Link Connected (Inmarsat-C / Starlink)'}
+            <span className="text-xs font-bold text-slate-900">
+              {networkMode === 'online' && 'Satellite Link Operational (Inmarsat-C / Polar Relay)'}
               {networkMode === 'patchy' && 'Intermittent Narrowband (Iridium 2.4 kbps)'}
-              {networkMode === 'blackout' && 'Polar Blizzard Blackout (Offline)'}
+              {networkMode === 'blackout' && 'Polar Atmospheric Partition (Offline)'}
             </span>
 
             {pendingCount === 0 ? (
-              <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full font-medium">
-                ✓ All station records up to date
+              <span className="text-[11px] text-slate-500 font-mono">
+                [Local store synchronized]
               </span>
             ) : (
-              <span className="text-xs text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full font-semibold">
-                ⏳ {pendingCount} update{pendingCount > 1 ? 's' : ''} saved locally on this machine
+              <span className="text-[11px] text-amber-900 bg-amber-50 border border-amber-200 px-2 py-0.2 rounded font-mono">
+                [{pendingCount} mutation(s) held in local IndexedDB]
               </span>
             )}
           </div>
 
-          <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+          <p className="text-[11px] text-slate-500 mt-0.5">
             {networkMode === 'online' && (
-              'Continuous two-way telemetry synchronization active with Ministry of Earth Sciences cloud hub.'
+              'Two-way differential replication active with NCPOR Central Hub in Goa.'
             )}
             {networkMode === 'patchy' && (
-              'Low-bandwidth mode active. High-priority safety updates take precedence; routine logs queued locally.'
+              'Narrowband constraint: Life-support alerts prioritize transmission; routine records held in local queue.'
             )}
             {networkMode === 'blackout' && (
-              'No satellite contact. You can freely log entries and fuel readings — everything is preserved locally in your browser and will automatically replicate when the link recovers.'
+              'Zero satellite connectivity. All mutations write directly to on-device IndexedDB and will reconcile automatically when link recovers.'
             )}
           </p>
         </div>
@@ -79,47 +79,47 @@ export const SatelliteBanner: React.FC<SatelliteBannerProps> = ({
           <button
             onClick={onTriggerSync}
             disabled={isSyncing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-colors disabled:opacity-50"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-            <span>{isSyncing ? 'Syncing...' : 'Sync Now'}</span>
+            <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin' : ''}`} />
+            <span>{isSyncing ? 'Transmitting...' : 'Transmit Queue'}</span>
           </button>
         )}
 
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs">
-          <span className="text-[11px] text-slate-400 font-medium px-1.5 hidden sm:inline">Simulate Link:</span>
+        <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded border border-slate-200 text-xs">
+          <span className="text-[10px] uppercase font-bold text-slate-400 px-1.5 hidden sm:inline">Link Simulation:</span>
           
           <button
             onClick={() => onSetNetworkMode('online')}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+            className={`px-2 py-0.5 rounded text-xs transition-all ${
               networkMode === 'online'
-                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                ? 'bg-white text-slate-900 font-semibold shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Normal
+            Nominal
           </button>
 
           <button
             onClick={() => onSetNetworkMode('patchy')}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+            className={`px-2 py-0.5 rounded text-xs transition-all ${
               networkMode === 'patchy'
-                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                ? 'bg-white text-slate-900 font-semibold shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Patchy (2.4k)
+            Narrowband
           </button>
 
           <button
             onClick={() => onSetNetworkMode('blackout')}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+            className={`px-2 py-0.5 rounded text-xs transition-all ${
               networkMode === 'blackout'
-                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                ? 'bg-white text-slate-900 font-semibold shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Blackout
+            Partitioned
           </button>
         </div>
       </div>
