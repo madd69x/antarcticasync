@@ -88,44 +88,44 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
     <div className="space-y-4">
       
       {/* Sub-navigation Tabs */}
-      <div className="flex items-center gap-1 border-b border-slate-200 text-xs font-semibold">
+      <div className="flex items-center gap-1 border-b border-slate-200 text-xs font-semibold overflow-x-auto no-scrollbar touch-pan-x -mx-3 px-3 sm:mx-0 sm:px-0 pb-0.5">
         <button
           onClick={() => setActiveSubTab('inventory')}
-          className={`pb-2 px-3 border-b-2 transition-all ${
+          className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
             activeSubTab === 'inventory'
               ? 'border-slate-900 text-slate-900'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          Consumables &amp; Spares Ledger
+          Consumables &amp; Spares
         </button>
 
         <button
           onClick={() => setActiveSubTab('madrid')}
-          className={`pb-2 px-3 border-b-2 transition-all ${
+          className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
             activeSubTab === 'madrid'
               ? 'border-slate-900 text-slate-900'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          Madrid Protocol Waste &amp; Clean Energy
+          Madrid Protocol Waste &amp; Energy
         </button>
 
         <button
           onClick={() => setActiveSubTab('scar')}
-          className={`pb-2 px-3 border-b-2 transition-all ${
+          className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
             activeSubTab === 'scar'
               ? 'border-slate-900 text-slate-900'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          SCAR Scientific Telemetry Export
+          SCAR Telemetry Export
         </button>
       </div>
 
       {/* SUB-TAB 1: INVENTORY TABLE */}
       {activeSubTab === 'inventory' && (
-        <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs space-y-3">
+        <div className="bg-white border border-slate-200 rounded-lg p-3.5 sm:p-4 shadow-xs space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
             <div>
               <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
@@ -135,7 +135,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                 Tracks survival buffer duration throughout the 8-month winter isolation window.
               </p>
             </div>
-            <span className="text-[11px] font-mono text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+            <span className="text-[11px] font-mono text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 self-start sm:self-auto">
               Bulk Arctic Fuel: ~62 Days Burn
             </span>
           </div>
@@ -146,19 +146,19 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search by item description or storage locker..."
+                placeholder="Search description or storage locker..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded focus:outline-none focus:border-slate-800 focus:bg-white"
               />
             </div>
 
-            <div className="flex items-center gap-1 overflow-x-auto text-xs py-0.5">
+            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar touch-pan-x text-xs py-0.5">
               {['All', 'Fuel', 'Spares', 'Medical', 'Life Support', 'Rations'].map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setCategoryFilter(cat)}
-                  className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                  className={`px-2.5 py-1 rounded text-xs font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
                     categoryFilter === cat
                       ? 'bg-slate-900 text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -170,8 +170,60 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
             </div>
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
+          {/* Mobile Card List View (< md screens) */}
+          <div className="space-y-2 md:hidden">
+            {filteredItems.map((item) => {
+              const isWatch = item.status === 'Watchlist';
+              const isCrit = item.status === 'Critical';
+
+              return (
+                <div key={item.id} className="p-3 rounded-lg border border-slate-200 bg-slate-50/60 space-y-2 text-xs">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-bold text-slate-900 text-xs">{item.name}</div>
+                      <div className="text-[10px] text-slate-500 font-mono mt-0.5">{item.storageLocation}</div>
+                    </div>
+                    <span className="bg-white text-slate-700 px-1.5 py-0.5 rounded font-mono text-[10px] border border-slate-200 flex-shrink-0">
+                      {item.category}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-200 font-mono text-[11px]">
+                    <div className="bg-white p-2 rounded border border-slate-200">
+                      <span className="text-[10px] text-slate-400 font-sans block">Stock Level</span>
+                      <strong className="text-slate-900">{item.currentStock.toLocaleString()} {item.unit}</strong>
+                      <span className="text-[10px] text-slate-500 block font-sans">~{item.burnRatePerDay}/day</span>
+                    </div>
+
+                    <div className="bg-white p-2 rounded border border-slate-200">
+                      <span className="text-[10px] text-slate-400 font-sans block">Buffer Status</span>
+                      <strong className={isCrit ? 'text-rose-700' : isWatch ? 'text-amber-700' : 'text-slate-900'}>
+                        {item.daysRemaining} days
+                      </strong>
+                      <span className="text-[10px] text-slate-500 block font-sans">
+                        {isWatch ? '[Watchlist]' : '[Nominal]'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      Checked: {item.lastInspected}
+                    </span>
+                    <button
+                      onClick={() => handlePromptStockUpdate(item)}
+                      className="px-3 py-1.5 rounded bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 font-semibold text-xs transition-colors"
+                    >
+                      Update Count
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop Table View (>= md screens) */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-xs text-left">
               <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 uppercase font-semibold text-[10px] tracking-wider">
                 <tr>

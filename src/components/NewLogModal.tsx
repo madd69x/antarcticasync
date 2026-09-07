@@ -38,8 +38,8 @@ export const NewLogModal: React.FC<NewLogModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white border border-slate-200 rounded-lg max-w-lg w-full p-5 shadow-xl space-y-4">
+    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white border border-slate-200 rounded-lg max-w-lg w-full p-4 sm:p-5 shadow-xl space-y-3.5 my-auto max-h-[94vh] overflow-y-auto">
         
         <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
           <div>
@@ -55,7 +55,7 @@ export const NewLogModal: React.FC<NewLogModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-3 text-xs">
           
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             <div>
               <label className="block text-slate-500 font-semibold mb-1 text-[11px]">Author Full Name</label>
               <input
@@ -79,7 +79,7 @@ export const NewLogModal: React.FC<NewLogModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             <div>
               <label className="block text-slate-500 font-semibold mb-1 text-[11px]">Category</label>
               <select

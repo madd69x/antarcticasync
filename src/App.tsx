@@ -214,7 +214,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Workspace */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-4 space-y-4">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-3 sm:py-4 space-y-3 sm:space-y-4">
         
         {/* Discrete Satellite Banner */}
         <SatelliteBanner
@@ -225,11 +225,11 @@ export const App: React.FC = () => {
           onTriggerSync={handleTriggerSync}
         />
 
-        {/* Primary Workspace Navigation Tabs */}
-        <div className="flex items-center gap-1 border-b border-slate-200 text-xs font-semibold overflow-x-auto pb-0.5">
+        {/* Primary Workspace Navigation Tabs - Mobile Touch Scrollable */}
+        <div className="flex items-center gap-1 border-b border-slate-200 text-xs font-semibold overflow-x-auto no-scrollbar touch-pan-x -mx-3 px-3 sm:mx-0 sm:px-0 pb-0.5">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+            className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
               activeTab === 'overview'
                 ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -240,7 +240,7 @@ export const App: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('power')}
-            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+            className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
               activeTab === 'power'
                 ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -251,7 +251,7 @@ export const App: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('map')}
-            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+            className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
               activeTab === 'map'
                 ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -262,7 +262,7 @@ export const App: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('logistics')}
-            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+            className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
               activeTab === 'logistics'
                 ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -273,7 +273,7 @@ export const App: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('safety')}
-            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+            className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
               activeTab === 'safety'
                 ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -284,7 +284,7 @@ export const App: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('sync')}
-            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+            className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
               activeTab === 'sync'
                 ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -295,7 +295,7 @@ export const App: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('hq')}
-            className={`pb-2 px-3 border-b-2 transition-all whitespace-nowrap ${
+            className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
               activeTab === 'hq'
                 ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-800'

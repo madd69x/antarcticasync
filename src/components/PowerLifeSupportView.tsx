@@ -149,12 +149,12 @@ export const PowerLifeSupportView: React.FC<PowerLifeSupportProps> = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           
           {/* Sliders */}
-          <div className="p-3 bg-slate-50 rounded border border-slate-200 space-y-3 text-xs">
+          <div className="p-3 bg-slate-50 rounded border border-slate-200 space-y-3.5 text-xs">
             <div>
-              <div className="flex justify-between font-semibold text-slate-700 mb-1">
+              <div className="flex justify-between font-semibold text-slate-700 mb-1.5">
                 <span>Exterior Ambient Temperature</span>
                 <span className="font-mono text-slate-900 font-bold">{simTemp}°C</span>
               </div>
@@ -164,16 +164,16 @@ export const PowerLifeSupportView: React.FC<PowerLifeSupportProps> = ({
                 max="-10"
                 value={simTemp}
                 onChange={(e) => setSimTemp(Number(e.target.value))}
-                className="w-full accent-slate-800 cursor-pointer"
+                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-800"
               />
-              <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+              <div className="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
                 <span>-65°C (Polar Deep Winter)</span>
                 <span>-10°C (Summer)</span>
               </div>
             </div>
 
             <div>
-              <div className="flex justify-between font-semibold text-slate-700 mb-1">
+              <div className="flex justify-between font-semibold text-slate-700 mb-1.5">
                 <span>Katabatic Blizzard Winds</span>
                 <span className="font-mono text-slate-900 font-bold">{simWind} Knots</span>
               </div>
@@ -183,9 +183,9 @@ export const PowerLifeSupportView: React.FC<PowerLifeSupportProps> = ({
                 max="85"
                 value={simWind}
                 onChange={(e) => setSimWind(Number(e.target.value))}
-                className="w-full accent-slate-800 cursor-pointer"
+                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-800"
               />
-              <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+              <div className="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
                 <span>10 kt (Calm)</span>
                 <span>85 kt (Severe Whiteout)</span>
               </div>
@@ -193,7 +193,7 @@ export const PowerLifeSupportView: React.FC<PowerLifeSupportProps> = ({
           </div>
 
           {/* Outcome Metric Cards */}
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             <div className="p-3 rounded border border-slate-200 bg-white space-y-1">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Calculated Burn Rate</span>
               <div className="text-xl font-bold font-mono text-slate-900">~{calculatedDailyBurn.toLocaleString()} L/day</div>
@@ -212,8 +212,8 @@ export const PowerLifeSupportView: React.FC<PowerLifeSupportProps> = ({
               </span>
             </div>
 
-            <div className="col-span-2 p-2.5 rounded border border-slate-200 bg-slate-50 text-[11px] text-slate-600 space-y-1">
-              <div className="flex justify-between font-semibold">
+            <div className="sm:col-span-2 p-2.5 rounded border border-slate-200 bg-slate-50 text-[11px] text-slate-600 space-y-1">
+              <div className="flex justify-between font-semibold flex-wrap gap-1">
                 <span>Target: MV Vasiliy Golovnin Arrival</span>
                 <span className={bufferDays >= 0 ? 'text-emerald-700 font-mono' : 'text-rose-700 font-mono'}>
                   {bufferDays >= 0 ? `+${bufferDays} Days Safety Buffer` : `Deficit: ${Math.abs(bufferDays)} Days Short!`}

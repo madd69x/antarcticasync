@@ -18,10 +18,10 @@ export const SatelliteBanner: React.FC<SatelliteBannerProps> = ({
   onTriggerSync
 }) => {
   return (
-    <div className="bg-white border border-slate-200 rounded-lg p-3 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+    <div className="bg-white border border-slate-200 rounded-lg p-3 sm:p-3.5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-3">
       
       {/* Status Info */}
-      <div className="flex items-start sm:items-center gap-3">
+      <div className="flex items-start sm:items-center gap-2.5 sm:gap-3">
         <div className="mt-0.5 sm:mt-0 flex-shrink-0 text-slate-600">
           {networkMode === 'online' && (
             <div className="w-7 h-7 rounded-md bg-slate-100 flex items-center justify-center border border-slate-200">
@@ -40,7 +40,7 @@ export const SatelliteBanner: React.FC<SatelliteBannerProps> = ({
           )}
         </div>
 
-        <div>
+        <div className="min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-bold text-slate-900">
               {networkMode === 'online' && 'Satellite Link Operational (Inmarsat-C / Polar Relay)'}
@@ -49,17 +49,17 @@ export const SatelliteBanner: React.FC<SatelliteBannerProps> = ({
             </span>
 
             {pendingCount === 0 ? (
-              <span className="text-[11px] text-slate-500 font-mono">
+              <span className="text-[10px] sm:text-[11px] text-slate-500 font-mono">
                 [Local store synchronized]
               </span>
             ) : (
-              <span className="text-[11px] text-amber-900 bg-amber-50 border border-amber-200 px-2 py-0.2 rounded font-mono">
+              <span className="text-[10px] sm:text-[11px] text-amber-900 bg-amber-50 border border-amber-200 px-2 py-0.2 rounded font-mono">
                 [{pendingCount} mutation(s) held in local IndexedDB]
               </span>
             )}
           </div>
 
-          <p className="text-[11px] text-slate-500 mt-0.5">
+          <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
             {networkMode === 'online' && (
               'Two-way differential replication active with NCPOR Central Hub in Goa.'
             )}
@@ -74,24 +74,24 @@ export const SatelliteBanner: React.FC<SatelliteBannerProps> = ({
       </div>
 
       {/* Simulator Controls & Sync Trigger */}
-      <div className="flex items-center gap-2 self-end md:self-center flex-wrap">
+      <div className="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
         {pendingCount > 0 && networkMode !== 'blackout' && (
           <button
             onClick={onTriggerSync}
             disabled={isSyncing}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-colors disabled:opacity-50"
+            className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 sm:py-1 rounded bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-colors disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin' : ''}`} />
             <span>{isSyncing ? 'Transmitting...' : 'Transmit Queue'}</span>
           </button>
         )}
 
-        <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded border border-slate-200 text-xs">
-          <span className="text-[10px] uppercase font-bold text-slate-400 px-1.5 hidden sm:inline">Link Simulation:</span>
+        <div className="grid grid-cols-3 sm:flex items-center gap-1 bg-slate-100 p-1 rounded border border-slate-200 text-xs">
+          <span className="text-[10px] uppercase font-bold text-slate-400 px-1.5 hidden lg:inline">Link Simulation:</span>
           
           <button
             onClick={() => onSetNetworkMode('online')}
-            className={`px-2 py-0.5 rounded text-xs transition-all ${
+            className={`px-2 py-1 sm:py-0.5 rounded text-xs transition-all text-center ${
               networkMode === 'online'
                 ? 'bg-white text-slate-900 font-semibold shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -102,7 +102,7 @@ export const SatelliteBanner: React.FC<SatelliteBannerProps> = ({
 
           <button
             onClick={() => onSetNetworkMode('patchy')}
-            className={`px-2 py-0.5 rounded text-xs transition-all ${
+            className={`px-2 py-1 sm:py-0.5 rounded text-xs transition-all text-center ${
               networkMode === 'patchy'
                 ? 'bg-white text-slate-900 font-semibold shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -113,7 +113,7 @@ export const SatelliteBanner: React.FC<SatelliteBannerProps> = ({
 
           <button
             onClick={() => onSetNetworkMode('blackout')}
-            className={`px-2 py-0.5 rounded text-xs transition-all ${
+            className={`px-2 py-1 sm:py-0.5 rounded text-xs transition-all text-center ${
               networkMode === 'blackout'
                 ? 'bg-white text-slate-900 font-semibold shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'

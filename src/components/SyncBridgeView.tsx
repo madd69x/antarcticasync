@@ -92,27 +92,27 @@ export const SyncBridgeView: React.FC<SyncBridgeViewProps> = ({
     <div className="space-y-4">
       
       {/* Sub-navigation Tabs */}
-      <div className="flex items-center gap-1 border-b border-slate-200 text-xs font-semibold">
+      <div className="flex items-center gap-1 border-b border-slate-200 text-xs font-semibold overflow-x-auto no-scrollbar touch-pan-x -mx-3 px-3 sm:mx-0 sm:px-0 pb-0.5">
         <button
           onClick={() => setActiveTab('crdt')}
-          className={`pb-2 px-3 border-b-2 transition-all ${
+          className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
             activeTab === 'crdt'
               ? 'border-slate-900 text-slate-900'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          CRDT Concurrent Conflict &amp; Merge Terminal
+          CRDT Concurrent Merge Terminal
         </button>
 
         <button
           onClick={() => setActiveTab('inspector')}
-          className={`pb-2 px-3 border-b-2 transition-all ${
+          className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
             activeTab === 'inspector'
               ? 'border-slate-900 text-slate-900'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          IndexedDB Local Storage &amp; Packet Inspector
+          IndexedDB Packet Inspector
         </button>
       </div>
 
@@ -215,10 +215,10 @@ export const SyncBridgeView: React.FC<SyncBridgeViewProps> = ({
               Trigger mutations above to advance local vector clocks independently, then execute CRDT auto-merge.
             </span>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
               <button
                 onClick={handleResetCrdt}
-                className="px-2.5 py-1 rounded border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium"
+                className="px-3 py-1.5 rounded border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium text-center"
               >
                 Reset Simulation
               </button>
@@ -226,7 +226,7 @@ export const SyncBridgeView: React.FC<SyncBridgeViewProps> = ({
               <button
                 onClick={handleRunCrdtMerge}
                 disabled={isReconciling}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-white font-semibold shadow-xs disabled:opacity-50"
+                className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-white font-semibold shadow-xs disabled:opacity-50 text-center"
               >
                 {isReconciling ? (
                   <>
@@ -236,7 +236,7 @@ export const SyncBridgeView: React.FC<SyncBridgeViewProps> = ({
                 ) : (
                   <>
                     <Play className="w-3.5 h-3.5" />
-                    <span>Reopen Satellite Link &amp; Run CRDT Merge</span>
+                    <span>Run CRDT Auto-Merge</span>
                   </>
                 )}
               </button>

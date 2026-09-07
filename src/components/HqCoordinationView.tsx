@@ -29,8 +29,8 @@ export const HqCoordinationView: React.FC<HqCoordinationViewProps> = ({
     <div className="space-y-4">
       
       {/* Masthead */}
-      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+      <div className="bg-white border border-slate-200 rounded-lg p-3.5 sm:p-4 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-b border-slate-100 pb-3">
           <div>
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
               National Centre for Polar and Ocean Research (NCPOR)
@@ -40,10 +40,10 @@ export const HqCoordinationView: React.FC<HqCoordinationViewProps> = ({
             </h2>
           </div>
 
-          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded text-xs font-mono">
-            <Ship className="w-3.5 h-3.5 text-slate-600" />
+          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded text-xs font-mono self-start sm:self-auto">
+            <Ship className="w-3.5 h-3.5 text-slate-600 flex-shrink-0" />
             <div>
-              <span className="text-[10px] text-slate-400 uppercase font-sans font-semibold block">Summer Resupply Voyage</span>
+              <span className="text-[9px] sm:text-[10px] text-slate-400 uppercase font-sans font-semibold block">Summer Resupply Voyage</span>
               <span className="font-bold text-slate-800">MV Vasiliy Golovnin · 42 Days to Departure</span>
             </div>
           </div>
@@ -82,7 +82,7 @@ export const HqCoordinationView: React.FC<HqCoordinationViewProps> = ({
 
             <button
               onClick={() => onSelectStation('bharati')}
-              className="w-full py-1 text-xs font-semibold rounded bg-slate-900 hover:bg-slate-800 text-white transition-colors"
+              className="w-full py-1.5 text-xs font-semibold rounded bg-slate-900 hover:bg-slate-800 text-white transition-colors"
             >
               Switch Field View to Bharati
             </button>
@@ -118,7 +118,7 @@ export const HqCoordinationView: React.FC<HqCoordinationViewProps> = ({
 
             <button
               onClick={() => onSelectStation('maitri')}
-              className="w-full py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-900 text-white transition-colors"
+              className="w-full py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-900 text-white transition-colors"
             >
               Switch Field View to Maitri
             </button>
@@ -154,7 +154,7 @@ export const HqCoordinationView: React.FC<HqCoordinationViewProps> = ({
 
             <button
               onClick={() => onSelectStation('himansh')}
-              className="w-full py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-900 text-white transition-colors"
+              className="w-full py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-900 text-white transition-colors"
             >
               Switch Field View to Himansh
             </button>
@@ -164,25 +164,25 @@ export const HqCoordinationView: React.FC<HqCoordinationViewProps> = ({
       </div>
 
       {/* Directives Broadcast Console */}
-      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs space-y-3">
+      <div className="bg-white border border-slate-200 rounded-lg p-3.5 sm:p-4 shadow-xs space-y-3">
         <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-          <Radio className="w-3.5 h-3.5 text-slate-600" />
+          <Radio className="w-3.5 h-3.5 text-slate-600 flex-shrink-0" />
           <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wider">
             NCPOR Operational Directives &amp; Broadcast Dispatch
           </h3>
         </div>
 
-        <form onSubmit={handleSendBroadcast} className="flex gap-2">
+        <form onSubmit={handleSendBroadcast} className="flex flex-col sm:flex-row gap-2">
           <input
             type="text"
-            placeholder="Enter official directive or advisory to transmit to polar stations..."
+            placeholder="Enter official directive to polar stations..."
             value={broadcastText}
             onChange={(e) => setBroadcastText(e.target.value)}
             className="flex-1 px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded focus:outline-none focus:border-slate-800"
           />
           <button
             type="submit"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded shadow-xs"
+            className="flex items-center justify-center gap-1.5 px-4 py-2 sm:py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded shadow-xs"
           >
             <Send className="w-3 h-3" />
             <span>Transmit</span>

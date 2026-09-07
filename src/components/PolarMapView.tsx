@@ -33,7 +33,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
       
       {/* Masthead */}
       <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-b border-slate-100 pb-3">
           <div>
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
               Antarctic Geographic Information System (GIS)
@@ -43,33 +43,33 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             </h2>
           </div>
 
-          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded text-xs font-mono">
-            <Satellite className="w-3.5 h-3.5 text-slate-500" />
+          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded text-xs font-mono self-start sm:self-auto">
+            <Satellite className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
             <div>
-              <span className="text-[10px] text-slate-400 uppercase font-sans font-semibold block">Next Orbital Window:</span>
+              <span className="text-[9px] sm:text-[10px] text-slate-400 uppercase font-sans font-semibold block">Next Orbital Window:</span>
               <span className="font-bold text-slate-800">{formatCountdown(nextPassSeconds)} (Iridium-NEXT)</span>
             </div>
           </div>
         </div>
 
         {/* Polar Projection Map & Traverses */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-3">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 mt-3">
           
           {/* Map Visualizer (2 Cols) */}
-          <div className="lg:col-span-2 bg-slate-900 rounded-lg p-4 relative overflow-hidden flex flex-col justify-between min-h-[380px] text-white">
+          <div className="lg:col-span-2 bg-slate-900 rounded-lg p-3 sm:p-4 relative overflow-hidden flex flex-col justify-between min-h-[340px] sm:min-h-[380px] text-white">
             
-            <div className="flex justify-between items-center z-10">
-              <div className="flex items-center gap-2 text-xs font-mono text-slate-300">
-                <Compass className="w-4 h-4 text-slate-400" />
-                <span>Polar Stereo WGS-84 Grid</span>
+            <div className="flex justify-between items-center z-10 gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-mono text-slate-300">
+                <Compass className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                <span className="truncate">Polar Stereo WGS-84</span>
               </div>
-              <span className="text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
-                True South Polar Reference
+              <span className="text-[9px] sm:text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700 whitespace-nowrap">
+                True South 90°S
               </span>
             </div>
 
-            <div className="relative my-4 flex items-center justify-center">
-              <svg viewBox="0 0 500 360" className="w-full max-h-[300px] select-none">
+            <div className="relative my-3 flex items-center justify-center overflow-hidden">
+              <svg viewBox="0 0 500 360" className="w-full max-h-[260px] sm:max-h-[300px] select-none">
                 {/* Latitude Rings */}
                 <circle cx="250" cy="180" r="160" fill="none" stroke="#1e293b" strokeWidth="1" strokeDasharray="3 3" />
                 <circle cx="250" cy="180" r="110" fill="none" stroke="#1e293b" strokeWidth="1" />
@@ -94,9 +94,9 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                   className="cursor-pointer"
                   onClick={() => onSelectStation('bharati')}
                 >
-                  <circle cx="370" cy="120" r="4" fill="#38bdf8" />
-                  <text x="380" y="118" fill="#f8fafc" fontSize="10" fontWeight="bold">Bharati Station</text>
-                  <text x="380" y="128" fill="#94a3b8" fontSize="8" fontFamily="monospace">69°24′S 76°11′E (Active)</text>
+                  <circle cx="370" cy="120" r="6" fill="#38bdf8" />
+                  <text x="382" y="118" fill="#f8fafc" fontSize="10" fontWeight="bold">Bharati Station</text>
+                  <text x="382" y="128" fill="#94a3b8" fontSize="8" fontFamily="monospace">69°24′S 76°11′E</text>
                 </g>
 
                 {/* Station: Maitri */}
@@ -104,15 +104,15 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                   className="cursor-pointer"
                   onClick={() => onSelectStation('maitri')}
                 >
-                  <circle cx="160" cy="130" r="4" fill="#34d399" />
+                  <circle cx="160" cy="130" r="6" fill="#34d399" />
                   <text x="95" y="125" fill="#f8fafc" fontSize="10" fontWeight="bold">Maitri Station</text>
                   <text x="85" y="135" fill="#94a3b8" fontSize="8" fontFamily="monospace">70°45′S 11°44′E</text>
                 </g>
 
                 {/* Historical: Dakshin Gangotri */}
                 <g className="cursor-default opacity-60">
-                  <circle cx="180" cy="150" r="2.5" fill="#64748b" />
-                  <text x="190" y="153" fill="#64748b" fontSize="8">Dakshin Gangotri (Depot)</text>
+                  <circle cx="180" cy="150" r="3" fill="#64748b" />
+                  <text x="190" y="153" fill="#64748b" fontSize="8">Dakshin Gangotri</text>
                 </g>
 
                 {/* Convoy Traverse Route */}
@@ -126,20 +126,48 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                 
                 {/* Active Convoy Marker */}
                 <g>
-                  <circle cx="325" cy="160" r="4" fill="#f59e0b" />
+                  <circle cx="325" cy="160" r="5" fill="#f59e0b" />
                   <text x="335" y="163" fill="#fef3c7" fontSize="9" fontWeight="bold">PB-01 Convoy</text>
                   <text x="335" y="173" fill="#cbd5e1" fontSize="8" fontFamily="monospace">64.2 km inland</text>
                 </g>
               </svg>
             </div>
 
-            <div className="flex items-center justify-between z-10 text-[11px] text-slate-400 border-t border-slate-800 pt-2 flex-wrap gap-2 font-mono">
-              <div className="flex items-center gap-4">
-                <span>[B] Bharati</span>
-                <span>[M] Maitri</span>
-                <span>[C] Active Traverse PB-01</span>
+            {/* Quick Station Tap Buttons for Mobile Thumb Navigation */}
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar touch-pan-x pb-2 pt-1 border-t border-slate-800 text-[11px] font-mono">
+              <span className="text-slate-400 mr-1 text-[10px] uppercase">Focus:</span>
+              <button
+                onClick={() => onSelectStation('bharati')}
+                className={`px-2 py-1 rounded transition-colors whitespace-nowrap ${
+                  currentStation === 'bharati' ? 'bg-sky-500 text-white font-bold' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                Bharati
+              </button>
+              <button
+                onClick={() => onSelectStation('maitri')}
+                className={`px-2 py-1 rounded transition-colors whitespace-nowrap ${
+                  currentStation === 'maitri' ? 'bg-emerald-600 text-white font-bold' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                Maitri
+              </button>
+              <button
+                onClick={() => onSelectStation('himansh')}
+                className={`px-2 py-1 rounded transition-colors whitespace-nowrap ${
+                  currentStation === 'himansh' ? 'bg-indigo-600 text-white font-bold' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                Himansh
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between z-10 text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-800/80 pt-2 flex-wrap gap-2 font-mono">
+              <div className="flex items-center gap-3">
+                <span>Scale: 1:5,000,000</span>
+                <span>Projection: Polar WGS-84</span>
               </div>
-              <span>Scale: 1:5,000,000</span>
+              <span className="text-slate-400">PB-01 Traverse Active</span>
             </div>
 
           </div>

@@ -52,10 +52,10 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
     <div className="space-y-4">
       
       {/* Sub-navigation Tabs */}
-      <div className="flex items-center gap-1 border-b border-slate-200 text-xs font-semibold">
+      <div className="flex items-center gap-1 border-b border-slate-200 text-xs font-semibold overflow-x-auto no-scrollbar touch-pan-x -mx-3 px-3 sm:mx-0 sm:px-0 pb-0.5">
         <button
           onClick={() => setActiveTab('blizzard')}
-          className={`pb-2 px-3 border-b-2 transition-all ${
+          className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
             activeTab === 'blizzard'
               ? 'border-slate-900 text-slate-900'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -66,7 +66,7 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
 
         <button
           onClick={() => setActiveTab('telemed')}
-          className={`pb-2 px-3 border-b-2 transition-all ${
+          className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
             activeTab === 'telemed'
               ? 'border-slate-900 text-slate-900'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -78,7 +78,7 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
 
       {/* SUB-TAB 1: BLIZZARD LOCKDOWN */}
       {activeTab === 'blizzard' && (
-        <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs space-y-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-3.5 sm:p-4 shadow-xs space-y-4">
           
           {/* Master Trigger Strip */}
           <div className={`p-3.5 rounded border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
@@ -97,7 +97,7 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
 
             <button
               onClick={handleToggleBlizzard}
-              className={`px-3.5 py-1.5 rounded text-xs font-bold transition-all whitespace-nowrap ${
+              className={`w-full sm:w-auto px-4 py-2 sm:py-1.5 rounded text-xs font-bold transition-all text-center whitespace-nowrap ${
                 isBlizzardActive 
                   ? 'bg-slate-900 hover:bg-slate-800 text-white' 
                   : 'bg-rose-700 hover:bg-rose-800 text-white'
@@ -285,10 +285,10 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
           </div>
 
           {/* Protocol Selection */}
-          <div className="flex items-center gap-1.5 overflow-x-auto text-xs pb-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar touch-pan-x text-xs pb-1">
             <button
               onClick={() => setSelectedProtocol('hypothermia')}
-              className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
                 selectedProtocol === 'hypothermia' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700'
               }`}
             >
@@ -296,19 +296,19 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
             </button>
             <button
               onClick={() => setSelectedProtocol('co')}
-              className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
                 selectedProtocol === 'co' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700'
               }`}
             >
-              Carbon Monoxide Inhalation
+              Carbon Monoxide
             </button>
             <button
               onClick={() => setSelectedProtocol('appendicitis')}
-              className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
                 selectedProtocol === 'appendicitis' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700'
               }`}
             >
-              Suspected Acute Appendicitis
+              Acute Appendicitis
             </button>
           </div>
 
@@ -347,7 +347,7 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
                   type="text"
                   value={patientId}
                   onChange={(e) => setPatientId(e.target.value)}
-                  className="w-full px-2 py-1 bg-white border border-slate-200 rounded text-xs"
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded text-xs"
                 />
               </div>
 
@@ -357,7 +357,7 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
                   type="text"
                   value={coreTemp}
                   onChange={(e) => setCoreTemp(e.target.value)}
-                  className="w-full px-2 py-1 bg-white border border-slate-200 rounded font-mono text-xs"
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded font-mono text-xs"
                 />
               </div>
 
@@ -367,7 +367,7 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
                   type="text"
                   value={heartRate}
                   onChange={(e) => setHeartRate(e.target.value)}
-                  className="w-full px-2 py-1 bg-white border border-slate-200 rounded font-mono text-xs"
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded font-mono text-xs"
                 />
               </div>
 
@@ -377,7 +377,7 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
                   type="text"
                   value={spo2}
                   onChange={(e) => setSpo2(e.target.value)}
-                  className="w-full px-2 py-1 bg-white border border-slate-200 rounded font-mono text-xs"
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded font-mono text-xs"
                 />
               </div>
             </div>
@@ -385,25 +385,25 @@ export const SafetyMedicalView: React.FC<SafetyMedicalViewProps> = ({
 
           {/* Compressed Packet Preview */}
           <div className="p-3 bg-slate-900 text-slate-300 font-mono text-[11px] rounded space-y-1">
-            <div className="flex justify-between text-slate-400 text-[10px] border-b border-slate-800 pb-1">
+            <div className="flex flex-col sm:flex-row justify-between text-slate-400 text-[10px] border-b border-slate-800 pb-1 gap-1">
               <span>AES-256 Encrypted Teleconsult Dossier</span>
-              <span>Compressed Size: 9.4 KB (Fit for 30s Iridium window)</span>
+              <span>Compressed Size: 9.4 KB (30s window)</span>
             </div>
             <div className="truncate text-slate-300 pt-1">
-              {`{ "caseId": "MED-BH-26-09", "dest": "AIIMS_POLAR_BOARD", "patient": "${patientId}", "coreTemp": "${coreTemp}C", "HR": ${heartRate}, "SpO2": "${spo2}%", "ecgLead2": "0.12,0.18,0.85,-0.20", "notes": "Cold exposure during perimeter traverse." }`}
+              {`{ "caseId": "MED-BH-26-09", "dest": "AIIMS_POLAR_BOARD", "patient": "${patientId}", "coreTemp": "${coreTemp}C", "HR": ${heartRate}, "SpO2": "${spo2}%" }`}
             </div>
           </div>
 
           {/* Transmit Action */}
-          <div className="flex items-center justify-between pt-1">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1">
             <span className="text-[11px] text-slate-500 font-mono">
-              Route: Bharati Clinic ➔ Iridium Narrowband ➔ AIIMS New Delhi
+              Route: Bharati Clinic ➔ Iridium Narrowband ➔ AIIMS
             </span>
 
             <button
               onClick={handleTransmitBurst}
               disabled={isPackaging || isDispatched}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-semibold shadow-xs disabled:opacity-50"
+              className="flex items-center justify-center gap-1.5 px-4 py-2 sm:py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-semibold shadow-xs disabled:opacity-50 w-full sm:w-auto"
             >
               {isPackaging ? (
                 <span>Packaging Dossier...</span>
