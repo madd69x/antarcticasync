@@ -57,16 +57,74 @@ Engineered specifically to overcome polar satellite blackouts, extreme sub-zero 
 
 ---
 
-## Technology Stack
+## Technology Stack & Architecture Flowchart
 
-| Layer | Technology |
-|---|---|
-| **Frontend** | React 18, TypeScript, Tailwind CSS, Lucide Icons, Vite |
-| **Local Storage** | Dexie.js (Browser IndexedDB) |
-| **Replication** | Conflict-Free Replicated Data Types (CRDTs), Vector Clocks |
-| **Polar GIS** | South Pole Stereographic SVG Projection |
-| **Audio** | Web Speech API Synthesis |
-| **Security & Integrity** | SHA-256 Cryptographic Checksums, AES Payload Packaging |
+```mermaid
+flowchart TD
+    %% Global Styling
+    classDef clientLayer fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0f172a;
+    classDef bridgeLayer fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#0f172a;
+    classDef cloudLayer fill:#f1f5f9,stroke:#475569,stroke-width:2px,color:#0f172a;
+    classDef accentNode fill:#ffffff,stroke:#0ea5e9,stroke-width:1.5px,color:#0f172a;
+    classDef storageNode fill:#ffffff,stroke:#10b981,stroke-width:1.5px,color:#0f172a;
+    classDef satNode fill:#ffffff,stroke:#8b5cf6,stroke-width:1.5px,color:#0f172a;
+
+    subgraph L1["LAYER 01: ANTARCTIC STATION (OFFLINE-FIRST EDGE SUITE)"]
+        direction TB
+        UI["React 18 & TypeScript PWA<br/><i>(Tailwind CSS + Lucide Icons)</i>"]:::accentNode
+        DAQs["Station Sensors & DAQ<br/><i>(Microgrid, Weather, Fuel Dipping)</i>"]:::accentNode
+        LocalDB[("Dexie.js Offline Store<br/><i>(Browser IndexedDB ACID)</i>")]:::storageNode
+        Outbox["CRDT Vector-Clock Outbox<br/><i>(Pending Delta Mutations)</i>"]:::storageNode
+
+        UI -->|"Writes Logs & Vitals"| LocalDB
+        DAQs -->|"Automated Telemetry"| LocalDB
+        LocalDB -->|"Generates Deltas"| Outbox
+    end
+
+    subgraph L2["LAYER 02: SYNC BRIDGE (INTERMITTENT SATELLITE RELAY LINK)"]
+        direction TB
+        QoS["Prioritized Sync Queue<br/><i>(SOS / Telemed > Telemetry > Logs)</i>"]:::satNode
+        Compress["Brotli Delta Packaging<br/><i>(87% Bandwidth Reduction)</i>"]:::satNode
+        Crypto["SHA-256 Checksum Engine<br/><i>(Cryptographic Integrity Seals)</i>"]:::satNode
+        Satellite["Iridium SBD / LEO Satellite<br/><i>(Patchy 30s Burst Window / 2.4 kbps)</i>"]:::satNode
+
+        QoS --> Compress --> Crypto --> Satellite
+    end
+
+    subgraph L3["LAYER 03: MoES & NCPOR CLOUD HUB (MISSION CONTROL HQ)"]
+        direction TB
+        Ingest["Telemetry Ingestion Gateway<br/><i>(Demuxer & Packet Reassembly)</i>"]:::accentNode
+        MergeEngine["Deterministic CRDT Resolver<br/><i>(Vector Clock Ordering & Deduplication)</i>"]:::accentNode
+        CentralDB[("NCPOR Mission Datastore<br/><i>(Verified Historical Archive)</i>")]:::storageNode
+        Dashboard["Mission Control Dashboard<br/><i>(Polar Stereographic GIS & Muster Live Cards)</i>"]:::accentNode
+
+        Ingest --> MergeEngine
+        MergeEngine --> CentralDB
+        CentralDB --> Dashboard
+    end
+
+    %% Inter-layer connections
+    Outbox ==>|"Opportunistic Satellite Pass"| QoS
+    Satellite ==>|"Burst Ingestion to Goa"| Ingest
+
+    class L1 clientLayer;
+    class L2 bridgeLayer;
+    class L3 cloudLayer;
+```
+
+### Technology Matrix
+
+| Layer | Component | Technology / Library | Purpose & Operational Function |
+|---|---|---|---|
+| **Frontend** | UI & State Engine | `React 18`, `TypeScript` | Responsive mission control interface with strict type safety |
+| **Styling** | Dark UI & Layout | `Tailwind CSS`, `PostCSS` | Sub-zero high-contrast dark theme optimized for low-glare field use |
+| **Edge Storage** | Offline Datastore | `Dexie.js` (`IndexedDB`) | Zero-cloud persistent local storage for station telemetry and logs |
+| **State Sync** | Conflict Resolution | `CRDTs`, `Vector Clocks` | Deterministic, multi-master state reconciliation across intermittent links |
+| **Cartography** | Polar Navigation | `Custom SVG Projection` | South Pole Azimuthal Stereographic Projection (`EPSG:3031`) |
+| **Iconography** | Telemetry Indicators | `Lucide React` | Clean, lightweight SVG interface icons |
+| **Voice Briefing**| Hands-Free Audio | `Web Speech Synthesis API` | Audio playback of morning station logs for mitt-wearing field engineers |
+| **Build & Tooling**| Dev Runtime | `Vite 6`, `Node.js` | Lightning-fast HMR and optimized production asset bundling |
+| **Hosting** | Edge Cloud | `Vercel` | High-availability global CDN edge deployment |
 
 ---
 
