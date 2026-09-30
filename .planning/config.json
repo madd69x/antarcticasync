@@ -1,0 +1,10 @@
+{
+  "project": "AntarcticaSync",
+  "version": "1.0.0",
+  "runtime": "antigravity",
+  "model_profile": "standard",
+  "workflow": {
+    "auto_commit": true,
+    "require_verification": true
+  }
+}
