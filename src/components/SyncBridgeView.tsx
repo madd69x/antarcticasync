@@ -2,7 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../db/polarDb';
 import type { SyncMutationPacket } from '../types';
 import { computeSha256Checksum } from '../services/polarService';
-import { GitMerge, Database, RefreshCw, Play, CheckCircle2 } from 'lucide-react';
+import { 
+  GitMerge, 
+  Database, 
+  RefreshCw, 
+  Play, 
+  CheckCircle2, 
+  Layers, 
+  Activity, 
+  Zap, 
+  FileText, 
+  ArrowRight, 
+  ShieldCheck, 
+  Radio, 
+  Cpu, 
+  Server 
+} from 'lucide-react';
 
 interface SyncBridgeViewProps {
   isOnline: boolean;
@@ -13,7 +28,32 @@ export const SyncBridgeView: React.FC<SyncBridgeViewProps> = ({
   isOnline,
   onTriggerSync
 }) => {
-  const [activeTab, setActiveTab] = useState<'crdt' | 'inspector'>('crdt');
+  const [activeTab, setActiveTab] = useState<'architecture' | 'crdt' | 'inspector'>('architecture');
+
+  // QoS Simulated Packets
+  const [qosPackets, setQosPackets] = useState<Array<{
+    id: string;
+    type: string;
+    priorityLevel: number; // 0 for P0, 1 for P1, 2 for P2
+    priorityLabel: string;
+    rawBytes: number;
+    compressedBytes: number;
+    timestamp: string;
+    checksum: string;
+  }>>([
+    {
+      id: 'PKT-9421',
+      type: 'Routine Shift Handover',
+      priorityLevel: 2,
+      priorityLabel: 'P2: Routine Log',
+      rawBytes: 4200,
+      compressedBytes: 546,
+      timestamp: 'Just now',
+      checksum: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+    }
+  ]);
+  const [isBursting, setIsBursting] = useState(false);
+  const [deliveredCount, setDeliveredCount] = useState(14);
 
   // CRDT Simulation states
   const [isPartitioned, setIsPartitioned] = useState(true);
@@ -88,16 +128,52 @@ export const SyncBridgeView: React.FC<SyncBridgeViewProps> = ({
     setVectorClockHq({ bh: 104, hq: 513 });
   };
 
+  const handleAddQosPacket = (type: string, priorityLevel: number, priorityLabel: string, rawBytes: number) => {
+    const newPkt = {
+      id: `PKT-${Math.floor(1000 + Math.random() * 9000)}`,
+      type,
+      priorityLevel,
+      priorityLabel,
+      rawBytes,
+      compressedBytes: Math.round(rawBytes * 0.13), // 87% Brotli reduction
+      timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      checksum: computeSha256Checksum(`${type}_${Date.now()}`)
+    };
+    // Prioritized queue: sort ascending by priorityLevel (0: P0 ECG/SOS first, then 1: P1 Telemetry, then 2: P2 Routine)
+    setQosPackets(prev => [...prev, newPkt].sort((a, b) => a.priorityLevel - b.priorityLevel));
+  };
+
+  const handleTransmitBurstQueue = () => {
+    if (qosPackets.length === 0) return;
+    setIsBursting(true);
+    setTimeout(() => {
+      setDeliveredCount(prev => prev + qosPackets.length);
+      setQosPackets([]);
+      setIsBursting(false);
+    }, 1400);
+  };
+
   return (
     <div className="space-y-4">
       
       {/* Sub-navigation Tabs */}
       <div className="flex items-center gap-1 border-b border-slate-200 text-xs font-semibold overflow-x-auto no-scrollbar touch-pan-x -mx-3 px-3 sm:mx-0 sm:px-0 pb-0.5">
         <button
+          onClick={() => setActiveTab('architecture')}
+          className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
+            activeTab === 'architecture'
+              ? 'border-slate-900 text-slate-900 font-bold'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          Three-Tier Architecture &amp; QoS Queue
+        </button>
+
+        <button
           onClick={() => setActiveTab('crdt')}
           className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
             activeTab === 'crdt'
-              ? 'border-slate-900 text-slate-900'
+              ? 'border-slate-900 text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -108,13 +184,257 @@ export const SyncBridgeView: React.FC<SyncBridgeViewProps> = ({
           onClick={() => setActiveTab('inspector')}
           className={`min-h-[38px] flex items-center pb-2 px-3 border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
             activeTab === 'inspector'
-              ? 'border-slate-900 text-slate-900'
+              ? 'border-slate-900 text-slate-900 font-bold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           IndexedDB Packet Inspector
         </button>
       </div>
+
+      {/* SUB-TAB 0: THREE-TIER ARCHITECTURE & QOS QUEUE */}
+      {activeTab === 'architecture' && (
+        <div className="space-y-4">
+          
+          {/* Header Card */}
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded font-mono uppercase">
+                  SIH Presentation Slide 3 Architecture
+                </span>
+                <span className="text-[10px] font-mono text-slate-400">
+                  Delay-Tolerant Networking (DTN RFC 9171)
+                </span>
+              </div>
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mt-1">
+                Multi-Tier Edge-to-Cloud Telemetry Pipeline
+              </h3>
+              <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
+                Demonstrates how packets generated offline at Antarctic research stations traverse the narrowband satellite relay link into the MoES Cloud Hub in Goa.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 font-mono text-xs">
+              <div className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded">
+                <span className="text-[9px] text-slate-400 block uppercase font-sans">Delivered to Goa</span>
+                <strong className="text-emerald-700 font-bold">{deliveredCount} Packets</strong>
+              </div>
+              <div className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded">
+                <span className="text-[9px] text-slate-400 block uppercase font-sans">In Queue</span>
+                <strong className="text-amber-700 font-bold">{qosPackets.length} Pending</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Interactive Three-Tier Visual Flow */}
+          <div className="space-y-3">
+            
+            {/* LAYER 01: ANTARCTIC STATION */}
+            <div className="p-3.5 rounded-xl border border-sky-200 bg-sky-50/50 space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-sky-900 bg-sky-200 px-2 py-0.5 rounded font-mono">
+                    LAYER 01
+                  </span>
+                  <span className="font-bold text-xs text-sky-950 uppercase">
+                    Antarctic Station (Offline-First Edge Suite)
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-sky-800 bg-white border border-sky-200 px-2 py-0.5 rounded font-semibold">
+                  7d Offline Ready · Dexie.js ACID Store
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
+                <div className="bg-white p-2.5 rounded-lg border border-sky-100 shadow-2xs space-y-0.5">
+                  <span className="font-bold text-slate-900 block">React 18 PWA</span>
+                  <span className="text-slate-500 text-[11px] block">Field Tablet &amp; Mobile GUI</span>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-sky-100 shadow-2xs space-y-0.5">
+                  <span className="font-bold text-slate-900 block">Dexie.js Local Store</span>
+                  <span className="text-slate-500 text-[11px] block">IndexedDB ACID Persistence</span>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-sky-100 shadow-2xs space-y-0.5">
+                  <span className="font-bold text-slate-900 block">Sensor Gateway</span>
+                  <span className="text-slate-500 text-[11px] block">Microgrid &amp; Met Telemetry</span>
+                </div>
+              </div>
+            </div>
+
+            {/* LAYER 02: SYNC BRIDGE */}
+            <div className="p-3.5 rounded-xl border border-purple-200 bg-purple-50/50 space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-purple-900 bg-purple-200 px-2 py-0.5 rounded font-mono">
+                    LAYER 02
+                  </span>
+                  <span className="font-bold text-xs text-purple-950 uppercase">
+                    Sync Bridge (Intermittent Satellite Relay Link)
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-purple-800 bg-white border border-purple-200 px-2 py-0.5 rounded font-semibold">
+                  87% Compressed · Iridium SBD 2.4 kbps
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
+                <div className="bg-white p-2.5 rounded-lg border border-purple-100 shadow-2xs space-y-0.5">
+                  <span className="font-bold text-slate-900 block">CRDT Conflict Resolution</span>
+                  <span className="text-slate-500 text-[11px] block">Deterministic Vector Clocks</span>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-purple-100 shadow-2xs space-y-0.5">
+                  <span className="font-bold text-slate-900 block">Brotli Delta Packaging</span>
+                  <span className="text-slate-500 text-[11px] block">87% Narrowband Reduction</span>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-purple-100 shadow-2xs space-y-0.5">
+                  <span className="font-bold text-slate-900 block">Prioritized Queue</span>
+                  <span className="text-slate-500 text-[11px] block">Telemetry QoS (ECG First)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* LAYER 03: MOES CLOUD HUB */}
+            <div className="p-3.5 rounded-xl border border-slate-300 bg-slate-100/70 space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-800 bg-slate-200 px-2 py-0.5 rounded font-mono">
+                    LAYER 03
+                  </span>
+                  <span className="font-bold text-xs text-slate-900 uppercase">
+                    MoES Cloud Hub (Central Mission HQ Goa/Delhi)
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-slate-700 bg-white border border-slate-300 px-2 py-0.5 rounded font-semibold">
+                  High-Availability Cloud · Ingestion &amp; Archive
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs">
+                <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-2xs space-y-0.5">
+                  <span className="font-bold text-slate-900 block">Node.js API Gateway</span>
+                  <span className="text-slate-500 text-[11px] block">REST &amp; Demux Ingest</span>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-2xs space-y-0.5">
+                  <span className="font-bold text-slate-900 block">PostgreSQL Master</span>
+                  <span className="text-slate-500 text-[11px] block">ACID Relational Ledger</span>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-2xs space-y-0.5">
+                  <span className="font-bold text-slate-900 block">MongoDB Aggregation</span>
+                  <span className="text-slate-500 text-[11px] block">Time-Series Telemetry</span>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-2xs space-y-0.5">
+                  <span className="font-bold text-slate-900 block">Alerting Engine</span>
+                  <span className="text-slate-500 text-[11px] block">Automated SOS &amp; SMS</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Interactive QoS Queue Simulator Controls */}
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+              <div>
+                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                  Test Priority Queue Dispatcher
+                </h4>
+                <p className="text-[11px] text-slate-500">
+                  Inject packets of different priorities to observe QoS re-ordering (P0 ECG leaps ahead of P1 &amp; P2).
+                </p>
+              </div>
+
+              {qosPackets.length > 0 && (
+                <button
+                  onClick={handleTransmitBurstQueue}
+                  disabled={isBursting}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isBursting ? 'animate-spin' : ''}`} />
+                  <span>{isBursting ? 'Burst Transmitting...' : `Transmit ${qosPackets.length} Packets via LEO Window`}</span>
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                onClick={() => handleAddQosPacket('Clinical Telemedicine ECG Dossier', 0, 'P0: Critical (ECG/SOS)', 9400)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-800 text-xs font-bold transition-colors"
+              >
+                <Activity className="w-3.5 h-3.5 text-rose-600" />
+                <span>+ Dispatch P0: Telemedicine ECG (Priority 1)</span>
+              </button>
+
+              <button
+                onClick={() => handleAddQosPacket('Microgrid Generator Voltage Drift', 1, 'P1: Telemetry', 1800)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-xs font-semibold transition-colors"
+              >
+                <Zap className="w-3.5 h-3.5 text-amber-600" />
+                <span>+ Dispatch P1: Microgrid Telemetry</span>
+              </button>
+
+              <button
+                onClick={() => handleAddQosPacket('Station Routine Shift Handover', 2, 'P2: Routine Log', 3600)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium transition-colors"
+              >
+                <FileText className="w-3.5 h-3.5 text-slate-500" />
+                <span>+ Dispatch P2: Routine Shift Log</span>
+              </button>
+            </div>
+
+            {/* In-Transit Queue Display */}
+            <div className="pt-2">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
+                Active In-Transit Queue (Sorted by QoS Strict Priority)
+              </span>
+
+              {qosPackets.length === 0 ? (
+                <div className="p-6 text-center text-xs text-slate-400 bg-slate-50 rounded-lg border border-dashed border-slate-200 font-mono">
+                  [All packets delivered to MoES Cloud Hub in Goa · Queue Ready for Next Satellite Pass]
+                </div>
+              ) : (
+                <div className="space-y-1.5 font-mono text-xs">
+                  {qosPackets.map((pkt, idx) => (
+                    <div 
+                      key={pkt.id} 
+                      className={`p-2.5 rounded-lg border flex flex-col sm:flex-row sm:items-center justify-between gap-2 transition-all ${
+                        pkt.priorityLevel === 0 
+                          ? 'bg-rose-50/70 border-rose-200 text-rose-950 font-bold' 
+                          : pkt.priorityLevel === 1 
+                          ? 'bg-amber-50/60 border-amber-200 text-amber-950 font-semibold' 
+                          : 'bg-white border-slate-200 text-slate-800'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="w-5 h-5 rounded-full bg-slate-900 text-white text-[10px] flex items-center justify-center font-bold">
+                          #{idx + 1}
+                        </span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
+                          pkt.priorityLevel === 0 ? 'bg-rose-600 text-white' : pkt.priorityLevel === 1 ? 'bg-amber-200 text-amber-900' : 'bg-slate-200 text-slate-700'
+                        }`}>
+                          {pkt.priorityLabel}
+                        </span>
+                        <span className="font-sans text-xs">{pkt.type}</span>
+                      </div>
+
+                      <div className="flex items-center gap-3 text-[11px] text-slate-600">
+                        <span>Raw: {pkt.rawBytes} B</span>
+                        <span>•</span>
+                        <span className="text-emerald-700 font-bold">Brotli Diff: {pkt.compressedBytes} B (-87%)</span>
+                        <span>•</span>
+                        <span className="text-[10px] text-slate-400 truncate max-w-[120px]" title={pkt.checksum}>
+                          SHA-256: {pkt.checksum.slice(0, 10)}...
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
+      )}
 
       {/* SUB-TAB 1: CRDT TERMINAL */}
       {activeTab === 'crdt' && (
