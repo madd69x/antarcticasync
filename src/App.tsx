@@ -400,7 +400,7 @@ export const App: React.FC = () => {
             AntarcticaSync · National Centre for Polar and Ocean Research (NCPOR), Ministry of Earth Sciences
           </span>
           <span>
-            SIH 2025 · PS ID: SIH26060 · Team FrostByte
+            Smart India Hackathon 2026 (PS ID: SIH26060) · Team FrstByte
           </span>
         </div>
       </footer>
