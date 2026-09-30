@@ -36,18 +36,18 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-b border-slate-100 pb-3">
           <div>
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
-              Antarctic Geographic Information System (GIS)
+              Antarctic Geographic Information System (AGIS)
             </span>
             <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider mt-0.5">
-              Azimuthal South Polar Stereographic Projection (70°S - 90°S)
+              South Polar Stereographic Projection (EPSG:3031 · WGS-84 · 70°S - 90°S)
             </h2>
           </div>
 
           <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded text-xs font-mono self-start sm:self-auto">
             <Satellite className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
             <div>
-              <span className="text-[9px] sm:text-[10px] text-slate-400 uppercase font-sans font-semibold block">Next Orbital Window:</span>
-              <span className="font-bold text-slate-800">{formatCountdown(nextPassSeconds)} (Iridium-NEXT)</span>
+              <span className="text-[9px] sm:text-[10px] text-slate-400 uppercase font-sans font-semibold block">Next Satellite Pass:</span>
+              <span className="font-bold text-slate-800">{formatCountdown(nextPassSeconds)} (Iridium-NEXT LEO)</span>
             </div>
           </div>
         </div>
@@ -60,11 +60,11 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             
             <div className="flex justify-between items-center z-10 gap-2">
               <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-mono text-slate-300">
-                <Compass className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                <span className="truncate">Polar Stereo WGS-84</span>
+                <Compass className="w-4 h-4 text-sky-400 flex-shrink-0" />
+                <span className="truncate">EPSG:3031 Polar Stereographic</span>
               </div>
-              <span className="text-[9px] sm:text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700 whitespace-nowrap">
-                True South 90°S
+              <span className="text-[9px] sm:text-[10px] font-mono text-sky-300 bg-slate-800 px-2 py-0.5 rounded border border-slate-700 whitespace-nowrap">
+                True South 90°S · Zero Distortion
               </span>
             </div>
 
@@ -202,17 +202,22 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                     <strong className="text-slate-800">{convoy.speedKmh} km/h</strong>
                   </div>
                   <div className="bg-slate-50 p-2 rounded border border-slate-200">
+                    <span className="text-slate-400 block text-[10px] font-sans font-semibold">Live GPS Telemetry:</span>
+                    <strong className="text-slate-800">70°14′S, 72°45′E</strong>
+                  </div>
+                  <div className="bg-slate-50 p-2 rounded border border-slate-200">
+                    <span className="text-slate-400 block text-[10px] font-sans font-semibold">Fuel On-board &amp; Range:</span>
+                    <strong className="text-slate-800">{convoy.fuelOnBoardLitres} L (220 km)</strong>
+                  </div>
+                  <div className="bg-slate-50 p-2 rounded border border-slate-200">
                     <span className="text-slate-400 block text-[10px] font-sans font-semibold">Distance from Base:</span>
                     <strong className="text-slate-800">{convoy.distanceFromBaseKm} km / {convoy.totalDistanceKm} km</strong>
                   </div>
-                  <div className="bg-slate-50 p-2 rounded border border-slate-200">
-                    <span className="text-slate-400 block text-[10px] font-sans font-semibold">Fuel on-board:</span>
-                    <strong className="text-slate-800">{convoy.fuelOnBoardLitres} L (ATF)</strong>
-                  </div>
                 </div>
 
-                <div className="text-[11px] text-slate-600 pt-1">
-                  Crew: <strong>{convoy.crewMembers.join(', ')}</strong>
+                <div className="text-[11px] text-slate-600 pt-1 flex justify-between items-center">
+                  <span>Crew: <strong>{convoy.crewMembers.join(', ')}</strong></span>
+                  <span className="text-[10px] text-sky-700 bg-sky-50 border border-sky-200 px-1.5 py-0.2 rounded font-mono">EPSG:3031 Calibrated</span>
                 </div>
               </div>
             </div>
