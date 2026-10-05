@@ -1,9 +1,16 @@
 # AntarcticaSync
 
-> **SIH 2025 · Problem Statement ID: SIH26060**  
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-antarcticasync.vercel.app-0284c7?style=flat-square&logo=vercel)](https://antarcticasync.vercel.app)
+[![SIH 2026](https://img.shields.io/badge/SIH%202026-PS%2026060-purple?style=flat-square)](https://www.sih.gov.in)
+[![MoES & NCPOR](https://img.shields.io/badge/Nodal%20Agency-MoES%20%26%20NCPOR%20Goa-emerald?style=flat-square)](https://data.ncpor.res.in)
+[![Offline First](https://img.shields.io/badge/Storage-IndexedDB%20%2F%20Dexie.js-amber?style=flat-square)](#)
+[![Replication](https://img.shields.io/badge/Replication-State--based%20CRDTs-indigo?style=flat-square)](#)
+
+> **SIH 2026 · Problem Statement ID: 26060**  
 > **Digital Platform for Efficient Remote Management of Indian Antarctic Research Stations**  
 > **Theme:** Smart Automation | **Category:** Software | **Organization:** Ministry of Earth Sciences (MoES) & NCPOR Goa  
-> **Team:** FrostByte
+> **Team:** FrostByte (Team ID: 136497)  
+> **Live Prototype:** [https://antarcticasync.vercel.app](https://antarcticasync.vercel.app)
 
 ---
 
